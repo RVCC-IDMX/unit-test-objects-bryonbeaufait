@@ -4,7 +4,7 @@
   Here is a illustration of a 4-banded electronic resistor:
     https://en.wikipedia.org/wiki/File:4-Band_Resistor.svg
 
-  Electronic resistors have colored bands where each color represents a numerical number
+  Electronic resi stors have coloredbands where each color represents a numerical number
   Electrical engineers can read the colors and determine the resistance
   value in Ohms for any resistor because the color codes are standardized.
 
@@ -61,7 +61,19 @@
  * then use the copied object like a lookup table
  */
 function getColorValue(color) {
-  // write your code here & return value
+  const colorCodes = {
+    black: 0,
+    brown: 1,
+    red: 2,
+    orange: 3,
+    yellow: 4,
+    green: 5,
+    blue: 6,
+    violet: 7,
+    grey: 8,
+    white: 9,
+  };
+  return colorCodes[color];
 }
 
 /**
@@ -78,7 +90,22 @@ function getColorValue(color) {
  * then use the copied object like a lookup table
  */
 function getMultiplierValue(color) {
-  // write your code here & return value
+  const multiplierCodes = {
+    black: 1,
+    brown: 10,
+    red: 100,
+    orange: 1000,
+    yellow: 10000,
+    green: 100000,
+    blue: 1000000,
+    violet: 10000000,
+    grey: 100000000,
+    white: 1000000000,
+    gold: 0.1,
+    silver: 0.01,
+  };
+
+  return multiplierCodes[color];
 }
 
 /**
@@ -105,7 +132,10 @@ function getMultiplierValue(color) {
  *
  */
 function getThreeBandValue(bands) {
-  // write your code here & return value
+  const result =
+    (getColorValue(bands.color1) * 10 + getColorValue(bands.color2)) *
+    getMultiplierValue(bands.multiplier);
+  return result;
 }
 
 /**
@@ -130,7 +160,25 @@ function getThreeBandValue(bands) {
  *
  */
 function formatNumber(val) {
-  // write your code here & return value
+  const num = val.toString().replace(/[^0-9.]/g, '');
+  if (num < 1000) {
+    return num;
+  }
+  const si = [
+    { v: 1e3, s: 'k' },
+    { v: 1e6, s: 'M' },
+    { v: 1e9, s: 'G' },
+  ];
+  let index;
+  for (index = si.length - 1; index > 0; index -= 1) {
+    if (num >= si[index].v) {
+      break;
+    }
+  }
+  return (
+    (num / si[index].v).toFixed(2).replace(/\.0+$|(\.[0-9]*[1-9])0+$/, '$1') +
+    si[index].s
+  );
 }
 
 /**
@@ -149,7 +197,18 @@ function formatNumber(val) {
  * example: 'green' => '±0.5%'
  */
 function getTolerance(color) {
-  // write your code here & return value
+  const toleranceCodes = {
+    brown: 1,
+    red: 2,
+    green: 0.5,
+    blue: 0.25,
+    violet: 0.1,
+    grey: 0.05,
+    gold: 5,
+    silver: 10,
+  };
+
+  return `±${toleranceCodes[color]}%`;
 }
 
 /**
@@ -181,7 +240,11 @@ function getTolerance(color) {
  * must use functions in this file to build the string using a template literal
  */
 function getResistorOhms(bands) {
-  // write your code here & return value
+  const result =
+    (getColorValue(bands.color1) * 10 + getColorValue(bands.color2)) *
+    getMultiplierValue(bands.multiplier);
+  const number = formatNumber(result);
+  return `Resistor value: ${number} Ohms ${getTolerance(bands.tolerance)}`;
 }
 
 module.exports = {
